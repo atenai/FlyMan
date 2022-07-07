@@ -1,0 +1,11 @@
+﻿  main.cpp
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(23): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(24): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(126): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(134): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(385): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(387): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(318): warning C4715: 'Update': 値を返さないコントロール パスがあります。
+libvcruntimed.lib(chkesp.obj) : error LNK2005: __CRT_RTC_INIT は既に libcmtd.lib(init.obj) で定義されています。
+libvcruntimed.lib(chkesp.obj) : error LNK2005: __CRT_RTC_INITW は既に libcmtd.lib(init.obj) で定義されています。
+C:\Users\alfam\Documents\制作作品アーカイブ\1年生HEW\フライマン\フライマン\Debug\20170123_renshu.exe : fatal error LNK1169: 1 つ以上の複数回定義されているシンボルが見つかりました。
