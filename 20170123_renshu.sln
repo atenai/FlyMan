@@ -1,6 +1,22 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.2.11415.280 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "Kindle", "..\..\AppData\Local\Amazon\Kindle\application\Kindle.exe", "{2F858BB5-8FCD-4BE0-A39B-6B4FB3B043D3}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\alfam\AppData\Local\Amazon\Kindle\application\Kindle.exe
+		RemoteMachine = LAPTOP-62HJ1LDH
+		StartingDirectory = C:\Users\alfam\AppData\Local\Amazon\Kindle\application
+		Environment = 既定
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+		IORedirection = Auto
+	EndProjectSection
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "20170123_renshu", "20170123_renshu.vcxproj", "{BAAB66DA-C8A7-45A1-8C96-57E7739E5649}"
 EndProject
 Global
@@ -9,6 +25,8 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F858BB5-8FCD-4BE0-A39B-6B4FB3B043D3}.Debug|Win32.ActiveCfg = Release|x86
+		{2F858BB5-8FCD-4BE0-A39B-6B4FB3B043D3}.Release|Win32.ActiveCfg = Release|x86
 		{BAAB66DA-C8A7-45A1-8C96-57E7739E5649}.Debug|Win32.ActiveCfg = Debug|Win32
 		{BAAB66DA-C8A7-45A1-8C96-57E7739E5649}.Debug|Win32.Build.0 = Debug|Win32
 		{BAAB66DA-C8A7-45A1-8C96-57E7739E5649}.Release|Win32.ActiveCfg = Release|Win32
