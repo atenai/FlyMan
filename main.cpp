@@ -3,18 +3,10 @@
 #include<stdlib.h>
 
 
-// グローバル変数（名前を分かりやすく）
+// グローバル変数（必要なもののみ）
 int g_currentFPS;
-int g_tempCounter1;
-int g_tempCounter2;
 float g_jumpStep = 0.5f;
-int g_initialJumpSpeed = 6; // ジャンプスピード（未使用の設定値）
 int g_fallState = 5; // 落下状態フラグ (0/1 を使う)
-int g_frame;
-int g_frameA;
-int g_frameB;
-int g_frameC;
-int g_stopFlag;
 int g_isJumping = 0;
 int g_jumpFrameCounter = 0;
 int g_jumpAscending = 0;
@@ -47,11 +39,6 @@ int main(void)
 
 		PlayerCharacter player;
 
-		g_frame = 0;
-		g_frameA = 0;
-		g_frameB = 0;
-		g_frameC = 0;
-		g_stopFlag = 1;
 		DWORD dwExecLastTime;
 		DWORD dwFPSLastTime;
 		DWORD dwCurrentTime;
@@ -100,7 +87,6 @@ int main(void)
 // 初期化処理
 void InitializePlayer(PlayerCharacter* pPlayer)
 {
-
 	pPlayer->fPosX = 1;  // ゲーム開始時のキャラクターの最初の位置
 	pPlayer->fPosY = 22; // ゲーム開始時のキャラクターの最初の位置
 }
@@ -308,7 +294,7 @@ void RenderScene(PlayerCharacter* pPlayer)
 {
 	LOCATE(1, 42); //(x,y);
 	COLOR(RED);
-	printf("▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲");//51個 一番下の地面
+	printf("▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲");//51個 一番下の地面
 	LOCATE(1, 22); // 地面表示1
 	COLOR(GRAY);
 	printf("■■■■■");
