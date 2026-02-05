@@ -67,9 +67,9 @@ int main(void)
 				}
 				// 画面描画処理
 				RenderScene(&player);
-				// DEBUGモードでFPS値を表示する
+				
 #ifdef _DEBUG
-				DisplayFPS();
+				DisplayFPS();// DEBUGモードでFPS値を表示する
 #endif
 
 				nCountFrame++;
@@ -344,7 +344,7 @@ void RenderScene(PlayerCharacter* pPlayer)
 	printf("■■■■■");
 	LOCATE(149, 24); // 地面表示25
 	printf("■■■■■");
-	LOCATE(156, 17); // 地面表示12/男たちの楽園
+	LOCATE(156, 17); // 地面表示12//ゴール
 	COLOR(BLUE);
 	printf("ゴール");
 
