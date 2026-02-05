@@ -3,56 +3,55 @@
 #include<stdlib.h>
 
 
-//変数
-int g_nCountFPS;
-int n;
-int m;
-float qitiao = 0.5;
-int jump = 6;//ジャンプスピード
-int fall = 5;//落ちるスピード
-int frame;
-int frame1;
-int frame2;
-int frame3;
-int stop;
-int flag = 0;
-int fps = 0;
-int jump1 = 0;
-int endleft = 1;//地面左範囲設定
-int endright = 166;//地面右範囲を広げる
-float speed = 0.6;//移動スピード
-float gra = 0.2;
+// グローバル変数（名前を分かりやすく）
+int g_currentFPS;
+int g_tempCounter1;
+int g_tempCounter2;
+float g_jumpStep = 0.5f;
+int g_initialJumpSpeed = 6; // ジャンプスピード（未使用の設定値）
+int g_fallState = 5; // 落下状態フラグ (0/1 を使う)
+int g_frame;
+int g_frameA;
+int g_frameB;
+int g_frameC;
+int g_stopFlag;
+int g_isJumping = 0;
+int g_jumpFrameCounter = 0;
+int g_jumpAscending = 0;
+int g_groundLeftBound = 1;   // 地面左範囲設定
+int g_groundRightBound = 166; // 地面右範囲
+float g_moveSpeed = 0.6f;    // 移動スピード
+float g_gravity = 0.2f;
 
-//構造体
+// 構造体
 typedef struct
 {
-	float fPosX0;
-	float fPosY0;
+	float fPrevPosX;
+	float fPrevPosY;
 	float fPosX;
 	float fPosY;
-}character;
+} PlayerCharacter;
 
-//プロトタイプ宣言
-void Init(character* pPlayer);
-int Update(character* pPlayer);
-void Draw(character* pPlayer);
-void DispFPS(void);
-void Uninit(void);
+// プロトタイプ宣言（名前を説明的に）
+void InitializePlayer(PlayerCharacter* pPlayer);
+int UpdatePlayer(PlayerCharacter* pPlayer);
+void RenderScene(PlayerCharacter* pPlayer);
+void DisplayFPS(void);
+void CleanupGame(void);
 
-//メイン関数
-void main(void)
+// メイン関数
+int main(void)
 {
 	while (1) {
 		COLOR(WHITE, BLACK);
 
-		character aplayer;
+		PlayerCharacter player;
 
-
-		frame = 0;
-		frame1 = 0;
-		frame2 = 0;
-		frame3 = 0;
-		stop = 1;
+		g_frame = 0;
+		g_frameA = 0;
+		g_frameB = 0;
+		g_frameC = 0;
+		g_stopFlag = 1;
 		DWORD dwExecLastTime;
 		DWORD dwFPSLastTime;
 		DWORD dwCurrentTime;
@@ -60,14 +59,14 @@ void main(void)
 		timeBeginPeriod(1);
 		dwExecLastTime = dwFPSLastTime = timeGetTime();
 		nCountFrame = 0;
-		//ゲーム初期化処理
-		Init(&aplayer);
+		// ゲーム初期化処理
+		InitializePlayer(&player);
 		CUROFF();
 
 		do {
 			dwCurrentTime = timeGetTime();
 			if ((dwCurrentTime - dwFPSLastTime) > 500) {
-				g_nCountFPS = nCountFrame * 1000 / (dwCurrentTime - dwFPSLastTime);
+				g_currentFPS = nCountFrame * 1000 / (dwCurrentTime - dwFPSLastTime);
 				dwFPSLastTime = dwCurrentTime;
 				nCountFrame = 0;
 			}
@@ -75,153 +74,156 @@ void main(void)
 			if ((dwCurrentTime - dwExecLastTime) >= (1000 / 60)) {
 
 				dwExecLastTime = dwCurrentTime;
-				//ステータス更新処理
-				if (Update(&aplayer) == 1) {
+				// ステータス更新処理
+				if (UpdatePlayer(&player) == 1) {
 					break;
 				}
-				//画面描画処理
-				Draw(&aplayer);
-				//DEBUGモードでFPS値を表示する
+				// 画面描画処理
+				RenderScene(&player);
+				// DEBUGモードでFPS値を表示する
 #ifdef _DEBUG
-				DispFPS();
+				DisplayFPS();
 #endif
 
 				nCountFrame++;
 			}
 		} while (!INP(KEY_ESC));
 		CURON();
-		//ゲーム初終了処理
-		Uninit();
+		// ゲーム終了処理
+		CleanupGame();
 		timeEndPeriod(1);
 	}
 
+	return 0;
 }
 
-//初期化処理
-void Init(character* pPlayer)
+// 初期化処理
+void InitializePlayer(PlayerCharacter* pPlayer)
 {
 
-	pPlayer->fPosX = 1;//ゲーム開始時のキャラクターの最初の位置
-	pPlayer->fPosY = 22;//ゲーム開始時のキャラクターの最初の位置
+	pPlayer->fPosX = 1;  // ゲーム開始時のキャラクターの最初の位置
+	pPlayer->fPosY = 22; // ゲーム開始時のキャラクターの最初の位置
 }
 
-//更新処理
-int Update(character* pPlayer)
+// 更新処理
+int UpdatePlayer(PlayerCharacter* pPlayer)
 {
-	pPlayer->fPosX0 = pPlayer->fPosX;//前回のキャラクターが表示されなくする
-	pPlayer->fPosY0 = pPlayer->fPosY;//ジャンプ設定
+	pPlayer->fPrevPosX = pPlayer->fPosX; // 前フレームの位置保存（消去用）
+	pPlayer->fPrevPosY = pPlayer->fPosY; // 前フレームの位置保存（ジャンプ判定）
 
-	//右移動
+	// 右移動
 	if (INP(PK_D)) {
-		pPlayer->fPosX = pPlayer->fPosX + speed;
-		if (pPlayer->fPosX > endright) {
-			pPlayer->fPosX = endright;
+		pPlayer->fPosX = pPlayer->fPosX + g_moveSpeed;
+		if (pPlayer->fPosX > g_groundRightBound) {
+			pPlayer->fPosX = g_groundRightBound;
 		}
 	}
 
-	//左移動
+	// 左移動
 	if (INP(PK_A)) {
-		pPlayer->fPosX = pPlayer->fPosX - speed;
-		if (pPlayer->fPosX < endleft) {
-			pPlayer->fPosX = endleft;
+		pPlayer->fPosX = pPlayer->fPosX - g_moveSpeed;
+		if (pPlayer->fPosX < g_groundLeftBound) {
+			pPlayer->fPosX = g_groundLeftBound;
 		}
 	}
 
-	//ジャンプ
-	if (flag == 1) {
-		pPlayer->fPosY = pPlayer->fPosY - qitiao;
-		fps = fps + 1;
+	// ジャンプ中の上昇処理
+	if (g_isJumping == 1) {
+		pPlayer->fPosY = pPlayer->fPosY - g_jumpStep;
+		g_jumpFrameCounter = g_jumpFrameCounter + 1;
 	}
 
-	//ジャンプ操作キー
-	if (INP(PK_W) && (fall == 0) && (jump1 == 0)) {
-		flag = 1;
+	// ジャンプキー入力（上昇開始）
+	if (INP(PK_W) && (g_fallState == 0) && (g_jumpAscending == 0)) {
+		g_isJumping = 1;
 	}
 
-	//ジャンプ上限
-	if (fps == 20) {
-		flag = 0;
-		fps = 0;
+	// ジャンプ上限判定
+	if (g_jumpFrameCounter == 20) {
+		g_isJumping = 0;
+		g_jumpFrameCounter = 0;
 	}
 
-	pPlayer->fPosY = pPlayer->fPosY + gra;
+	// 重力適用
+	pPlayer->fPosY = pPlayer->fPosY + g_gravity;
 
+	// 地面判定（ゲームオーバー）
 	if (pPlayer->fPosY > 42)
 	{
-		pPlayer->fPosY = 42;//一番下の地面
+		pPlayer->fPosY = 42; // 一番下の地面
 		CLS(RED, BLACK);
 		LOCATE(44, 15);
 		printf("ゲームオーバー\n");
 		system("pause");
 		return 1;
-
 	}
 
-	if ((pPlayer->fPosY > 20) && (pPlayer->fPosY < 22) && (pPlayer->fPosX <= 10) && (fall == 1))//空中地面の設定1
+	// 空中地面の設定（各プラットフォームの当たり判定）
+	if ((pPlayer->fPosY > 20) && (pPlayer->fPosY < 22) && (pPlayer->fPosX <= 10) && (g_fallState == 1))
 	{
 		pPlayer->fPosY = 21;
 	}
 
-	if ((pPlayer->fPosY > 16) && (pPlayer->fPosY < 18) && (pPlayer->fPosX <= 49) && (pPlayer->fPosX >= 39) && (fall == 1))//空中地面の設定2
+	if ((pPlayer->fPosY > 16) && (pPlayer->fPosY < 18) && (pPlayer->fPosX <= 49) && (pPlayer->fPosX >= 39) && (g_fallState == 1))
 	{
 		pPlayer->fPosY = 17;
 	}
 
-	if ((pPlayer->fPosY > 10) && (pPlayer->fPosY < 12) && (pPlayer->fPosX <= 40) && (pPlayer->fPosX >= 30) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 10) && (pPlayer->fPosY < 12) && (pPlayer->fPosX <= 40) && (pPlayer->fPosX >= 30) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 11;//キャラクターの上っている位置3
+		pPlayer->fPosY = 11;
 	}
 
-	if ((pPlayer->fPosY > 14) && (pPlayer->fPosY < 16) && (pPlayer->fPosX <= 34) && (pPlayer->fPosX >= 24) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 14) && (pPlayer->fPosY < 16) && (pPlayer->fPosX <= 34) && (pPlayer->fPosX >= 24) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 15;//キャラクターの上っている位置4
+		pPlayer->fPosY = 15;
 	}
 
-	if ((pPlayer->fPosY > 17) && (pPlayer->fPosY < 19) && (pPlayer->fPosX <= 20) && (pPlayer->fPosX >= 10) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 17) && (pPlayer->fPosY < 19) && (pPlayer->fPosX <= 20) && (pPlayer->fPosX >= 10) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 18;//キャラクターの上っている位置5
+		pPlayer->fPosY = 18;
 	}
 
-	if ((pPlayer->fPosY > 18) && (pPlayer->fPosY < 20) && (pPlayer->fPosX <= 60) && (pPlayer->fPosX >= 50) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 18) && (pPlayer->fPosY < 20) && (pPlayer->fPosX <= 60) && (pPlayer->fPosX >= 50) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 19;//キャラクターの上っている位置6
+		pPlayer->fPosY = 19;
 	}
 
-	if ((pPlayer->fPosY > 8) && (pPlayer->fPosY < 10) && (pPlayer->fPosX <= 55) && (pPlayer->fPosX >= 45) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 8) && (pPlayer->fPosY < 10) && (pPlayer->fPosX <= 55) && (pPlayer->fPosX >= 45) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 9;//キャラクターの上っている位置7
+		pPlayer->fPosY = 9;
 	}
 
-	if ((pPlayer->fPosY > 6) && (pPlayer->fPosY < 8) && (pPlayer->fPosX <= 75) && (pPlayer->fPosX >= 65) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 6) && (pPlayer->fPosY < 8) && (pPlayer->fPosX <= 75) && (pPlayer->fPosX >= 65) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 7;//キャラクターの上っている位置8
+		pPlayer->fPosY = 7;
 	}
 
-	if ((pPlayer->fPosY > 6) && (pPlayer->fPosY < 8) && (pPlayer->fPosX <= 94) && (pPlayer->fPosX >= 84) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 6) && (pPlayer->fPosY < 8) && (pPlayer->fPosX <= 94) && (pPlayer->fPosX >= 84) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 7;//キャラクターの上っている位置9
+		pPlayer->fPosY = 7;
 	}
 
-	if ((pPlayer->fPosY > 34) && (pPlayer->fPosY < 36) && (pPlayer->fPosX <= 22) && (fall == 1))//空中地面の設定10
+	if ((pPlayer->fPosY > 34) && (pPlayer->fPosY < 36) && (pPlayer->fPosX <= 22) && (g_fallState == 1))
 	{
 		pPlayer->fPosY = 35;
 	}
 
-	if ((pPlayer->fPosY > 33) && (pPlayer->fPosY < 34) && (pPlayer->fPosX <= 4) && (fall == 1))//バグリセット
+	if ((pPlayer->fPosY > 33) && (pPlayer->fPosY < 34) && (pPlayer->fPosX <= 4) && (g_fallState == 1))
 	{
 		CLS();
 		LOCATE(44, 15);
 		printf("ゲームスタート");
 	}
 
-	if ((pPlayer->fPosY > 34) && (pPlayer->fPosY < 36) && (pPlayer->fPosX <= 56) && (pPlayer->fPosX >= 34) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 34) && (pPlayer->fPosY < 36) && (pPlayer->fPosX <= 56) && (pPlayer->fPosX >= 34) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 35;//キャラクターの上っている位置11
+		pPlayer->fPosY = 35;
 	}
 
-	if ((pPlayer->fPosY > 15) && (pPlayer->fPosY < 17) && (pPlayer->fPosX <= 166) && (pPlayer->fPosX >= 156) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 15) && (pPlayer->fPosY < 17) && (pPlayer->fPosX <= 166) && (pPlayer->fPosX >= 156) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 16;//キャラクターの上っている位置12/男たちの楽園
+		pPlayer->fPosY = 16;
 		CLS(BLUE);
 		LOCATE(44, 15);
 		printf("ゲームクリアー");
@@ -230,152 +232,153 @@ int Update(character* pPlayer)
 		return 1;
 	}
 
-	if ((pPlayer->fPosY > 30) && (pPlayer->fPosY < 32) && (pPlayer->fPosX <= 67) && (pPlayer->fPosX >= 57) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 30) && (pPlayer->fPosY < 32) && (pPlayer->fPosX <= 67) && (pPlayer->fPosX >= 57) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 31;//キャラクターの上っている位置13
+		pPlayer->fPosY = 31;
 	}
 
-	if ((pPlayer->fPosY > 27) && (pPlayer->fPosY < 29) && (pPlayer->fPosX <= 77) && (pPlayer->fPosX >= 67) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 27) && (pPlayer->fPosY < 29) && (pPlayer->fPosX <= 77) && (pPlayer->fPosX >= 67) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 28;//キャラクターの上っている位置14
+		pPlayer->fPosY = 28;
 	}
-	if ((pPlayer->fPosY > 23) && (pPlayer->fPosY < 25) && (pPlayer->fPosX <= 88) && (pPlayer->fPosX >= 78) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 23) && (pPlayer->fPosY < 25) && (pPlayer->fPosX <= 88) && (pPlayer->fPosX >= 78) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 24;//キャラクターの上っている位置15
+		pPlayer->fPosY = 24;
 	}
-	if ((pPlayer->fPosY > 19) && (pPlayer->fPosY < 21) && (pPlayer->fPosX <= 77) && (pPlayer->fPosX >= 67) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 19) && (pPlayer->fPosY < 21) && (pPlayer->fPosX <= 77) && (pPlayer->fPosX >= 67) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 20;//キャラクターの上っている位置16
+		pPlayer->fPosY = 20;
 	}
-	if ((pPlayer->fPosY > 25) && (pPlayer->fPosY < 27) && (pPlayer->fPosX <= 34) && (pPlayer->fPosX >= 24) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 25) && (pPlayer->fPosY < 27) && (pPlayer->fPosX <= 34) && (pPlayer->fPosX >= 24) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 26;//キャラクターの上っている位置17
+		pPlayer->fPosY = 26;
 	}
-	if ((pPlayer->fPosY > 10) && (pPlayer->fPosY < 12) && (pPlayer->fPosX <= 120) && (pPlayer->fPosX >= 110) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 10) && (pPlayer->fPosY < 12) && (pPlayer->fPosX <= 120) && (pPlayer->fPosX >= 110) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 11;//キャラクターの上っている位置18
+		pPlayer->fPosY = 11;
 	}
-	if ((pPlayer->fPosY > 18) && (pPlayer->fPosY < 20) && (pPlayer->fPosX <= 142) && (pPlayer->fPosX >= 132) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 18) && (pPlayer->fPosY < 20) && (pPlayer->fPosX <= 142) && (pPlayer->fPosX >= 132) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 19;//キャラクターの上っている位置19
+		pPlayer->fPosY = 19;
 	}
-	if ((pPlayer->fPosY > 21) && (pPlayer->fPosY < 23) && (pPlayer->fPosX <= 122) && (pPlayer->fPosX >= 112) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 21) && (pPlayer->fPosY < 23) && (pPlayer->fPosX <= 122) && (pPlayer->fPosX >= 112) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 22;//キャラクターの上っている位置20
+		pPlayer->fPosY = 22;
 	}
-	if ((pPlayer->fPosY > 23) && (pPlayer->fPosY < 25) && (pPlayer->fPosX <= 19) && (pPlayer->fPosX >= 9) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 23) && (pPlayer->fPosY < 25) && (pPlayer->fPosX <= 19) && (pPlayer->fPosX >= 9) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 24;//キャラクターの上っている位置21
+		pPlayer->fPosY = 24;
 	}
-	if ((pPlayer->fPosY > 29) && (pPlayer->fPosY < 31) && (pPlayer->fPosX <= 21) && (pPlayer->fPosX >= 11) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 29) && (pPlayer->fPosY < 31) && (pPlayer->fPosX <= 21) && (pPlayer->fPosX >= 11) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 30;//キャラクターの上っている位置22
+		pPlayer->fPosY = 30;
 	}
-	if ((pPlayer->fPosY > 32) && (pPlayer->fPosY < 34) && (pPlayer->fPosX <= 137) && (pPlayer->fPosX >= 127) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 32) && (pPlayer->fPosY < 34) && (pPlayer->fPosX <= 137) && (pPlayer->fPosX >= 127) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 33;//キャラクターの上っている位置23
+		pPlayer->fPosY = 33;
 	}
-	if ((pPlayer->fPosY > 27) && (pPlayer->fPosY < 29) && (pPlayer->fPosX <= 150) && (pPlayer->fPosX >= 140) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 27) && (pPlayer->fPosY < 29) && (pPlayer->fPosX <= 150) && (pPlayer->fPosX >= 140) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 28;//キャラクターの上っている位置24
+		pPlayer->fPosY = 28;
 	}
-	if ((pPlayer->fPosY > 22) && (pPlayer->fPosY < 24) && (pPlayer->fPosX <= 159) && (pPlayer->fPosX >= 149) && (fall == 1))//空中地面の設定(x=1ブロック2マス)
+	if ((pPlayer->fPosY > 22) && (pPlayer->fPosY < 24) && (pPlayer->fPosX <= 159) && (pPlayer->fPosX >= 149) && (g_fallState == 1))
 	{
-		pPlayer->fPosY = 23;//キャラクターの上っている位置25
+		pPlayer->fPosY = 23;
 	}
 
-	//ジャンプ設定
-	if ((pPlayer->fPosY > pPlayer->fPosY0))
+	// ジャンプ/落下状態判定
+	if ((pPlayer->fPosY > pPlayer->fPrevPosY))
 	{
-		fall = 1;
+		g_fallState = 1;
 	}
-	if ((pPlayer->fPosY == pPlayer->fPosY0))
+	if ((pPlayer->fPosY == pPlayer->fPrevPosY))
 	{
-		fall = 0;
-		jump1 = 0;
+		g_fallState = 0;
+		g_jumpAscending = 0;
 	}
-	if (pPlayer->fPosY < pPlayer->fPosY0)
+	if (pPlayer->fPosY < pPlayer->fPrevPosY)
 	{
-		jump1 = 1;
+		g_jumpAscending = 1;
 	}
+
+	return 0;
 }
 
-void Draw(character* pPlayer)
+void RenderScene(PlayerCharacter* pPlayer)
 {
-	LOCATE(1, 42);//(x,y);
+	LOCATE(1, 42); //(x,y);
 	COLOR(RED);
-	printf("▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲");//51個 一番下の地面
-	LOCATE(1, 22);//地面表示1
+	printf("▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲");//51個 一番下の地面
+	LOCATE(1, 22); // 地面表示1
 	COLOR(GRAY);
 	printf("■■■■■");
-	LOCATE(10, 19);//地面表示5
+	LOCATE(10, 19); // 地面表示5
 	printf("■■■■■");
-	LOCATE(39, 18);//地面表示2
+	LOCATE(39, 18); // 地面表示2
 	printf("■■■■■");
-	LOCATE(30, 12);//地面表示3
+	LOCATE(30, 12); // 地面表示3
 	printf("■■■■■");
-	LOCATE(24, 16);//地面表示4
+	LOCATE(24, 16); // 地面表示4
 	printf("■■■■■");
-	LOCATE(50, 20);//地面表示6
+	LOCATE(50, 20); // 地面表示6
 	printf("■■■■■");
-	LOCATE(45, 10);//地面表示7
+	LOCATE(45, 10); // 地面表示7
 	printf("■■■■■");
-	LOCATE(65, 8);//地面表示8
+	LOCATE(65, 8); // 地面表示8
 	printf("■■■■■");
-	LOCATE(84, 8);//地面表示9
+	LOCATE(84, 8); // 地面表示9
 	printf("■■■■■");
-	LOCATE(1, 36);//地面表示10
+	LOCATE(1, 36); // 地面表示10
 	printf("■■■■■■■■■■■");
-	LOCATE(34, 36);//地面表示11
+	LOCATE(34, 36); // 地面表示11
 	printf("■■■■■■■■■■■");
-	LOCATE(57, 32);//地面表示13
+	LOCATE(57, 32); // 地面表示13
 	printf("■■■■■");
-	LOCATE(67, 29);//地面表示14
+	LOCATE(67, 29); // 地面表示14
 	printf("■■■■■");
-	LOCATE(78, 25);//地面表示15
+	LOCATE(78, 25); // 地面表示15
 	printf("■■■■■");
-	LOCATE(67, 21);//地面表示16
+	LOCATE(67, 21); // 地面表示16
 	printf("■■■■■");
-	LOCATE(24, 27);//地面表示17
+	LOCATE(24, 27); // 地面表示17
 	printf("■■■■■");
-	LOCATE(110, 12);//地面表示18
+	LOCATE(110, 12); // 地面表示18
 	printf("■■■■■");
-	LOCATE(132, 20);//地面表示19
+	LOCATE(132, 20); // 地面表示19
 	printf("■■■■■");
-	LOCATE(112, 23);//地面表示20
+	LOCATE(112, 23); // 地面表示20
 	printf("■■■■■");
-	LOCATE(9, 25);//地面表示21
+	LOCATE(9, 25); // 地面表示21
 	printf("■■■■■");
-	LOCATE(11, 31);//地面表示22
+	LOCATE(11, 31); // 地面表示22
 	printf("■■■■■");
-	LOCATE(127, 34);//地面表示23
+	LOCATE(127, 34); // 地面表示23
 	printf("■■■■■");
-	LOCATE(140, 29);//地面表示24
+	LOCATE(140, 29); // 地面表示24
 	printf("■■■■■");
-	LOCATE(149, 24);//地面表示25
+	LOCATE(149, 24); // 地面表示25
 	printf("■■■■■");
-	LOCATE(156, 17);//地面表示12/男たちの楽園
+	LOCATE(156, 17); // 地面表示12/男たちの楽園
 	COLOR(BLUE);
 	printf("ゴール");
 
 
-	LOCATE(pPlayer->fPosX0, pPlayer->fPosY0);
-	printf("  ");//キャラクター増幅を消す
+	LOCATE(pPlayer->fPrevPosX, pPlayer->fPrevPosY);
+	printf("  "); // キャラクター消去
 	LOCATE(pPlayer->fPosX, pPlayer->fPosY);
-	printf("男");//キャラクターの見た目
+	printf("男"); // キャラクター表示
 
 }
 
-//フレームレート
-void DispFPS(void)
+// フレームレート表示
+void DisplayFPS(void)
 {
-	LOCATE(2, 4);//フレームレート表示場所
+	LOCATE(2, 4); // フレームレート表示場所
 	COLOR(WHITE);
-	printf("FPS : %d", g_nCountFPS);//フレームレート表示
+	printf("FPS : %d", g_currentFPS); // フレームレート表示
 }
 
-void Uninit(void)
+void CleanupGame(void)
 {
 
 }
-
