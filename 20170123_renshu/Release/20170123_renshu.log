@@ -1,14 +1,15 @@
 ﻿  CScreen.cpp
   main.cpp
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(23,12): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(24,10): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(126,19): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(134,19): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(385,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(387,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(23,13): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(24,11): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(118,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(126,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(362,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(364,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   コード生成しています。
-  Previous IPDB not found, fall back to full compilation.
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(318): warning C4715: 'Update': 値を返さないコントロール パスがあります。
-  All 108 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(301): warning C4715: 'Update': 値を返さないコントロール パスがあります。
+  2 of 108 functions ( 1.9%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
   コード生成が終了しました。
   20170123_renshu.vcxproj -> C:\Users\alfam\Documents\FlyMan_Git\Release\20170123_renshu.exe

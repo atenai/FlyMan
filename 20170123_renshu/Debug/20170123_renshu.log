@@ -1,11 +1,9 @@
-﻿  CScreen.cpp
-  main.cpp
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(23,12): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(24,10): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(126,19): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(134,19): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(385,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(387,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-  コードを生成中...
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(318,1): warning C4715: 'Update': 値を返さないコントロール パスがあります。
+﻿  main.cpp
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(23,13): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(24,11): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(118,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(126,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(362,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(364,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(301,1): warning C4715: 'Update': 値を返さないコントロール パスがあります。
   20170123_renshu.vcxproj -> C:\Users\alfam\Documents\FlyMan_Git\Debug\20170123_renshu.exe
