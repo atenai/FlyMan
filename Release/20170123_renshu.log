@@ -1,11 +1,1 @@
-﻿  main.cpp
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(23): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(24): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(126): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(134): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(385): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-c:\users\alfam\documents\制作作品アーカイブ\1年生hew\フライマン\フライマン\main.cpp(387): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-main.obj : error LNK2001: 外部シンボル "__imp__clock" は未解決です。
-main.obj : error LNK2001: 外部シンボル "__imp__system" は未解決です。
-CScreenRel.lib(main.obj) : error LNK2001: 外部シンボル "_sprintf" は未解決です。
-C:\Users\alfam\Documents\制作作品アーカイブ\1年生HEW\フライマン\フライマン\Release\20170123_renshu.exe : fatal error LNK1120: 3 件の未解決の外部参照
+﻿C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Microsoft\VC\v150\Microsoft.Cpp.WindowsSDK.targets(46,5): error MSB8036: Windows SDK バージョン 10.0.16299.0 が見つかりませんでした。必要なバージョンの Windows SDK をインストールするか、プロジェクト プロパティ ページで SDK バージョンを変更するか、ソリューションを右クリックして [ソリューションの再ターゲット] を選択してください。

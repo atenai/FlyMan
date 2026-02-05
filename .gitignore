@@ -30,3 +30,38 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio 一時 / キャッシュ
+.vs/
+ipch/
+*.VC.db
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ビルド出力
+Debug/
+Release/
+x64/Debug/
+x64/Release/
+bin/
+obj/
+build/
+
+# コンパイラ生成物
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.log
+
+# その他（一時ファイル）
+*.cache
+*.sdf
+*.opensdf
+*.tlog
+*.lastbuildstate
