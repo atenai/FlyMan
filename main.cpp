@@ -1,6 +1,7 @@
 #include "CScreen.h"
 #include<stdio.h>
 #include<stdlib.h>
+#include<windows.h>
 
 
 // グローバル変数（必要なもののみ）
@@ -34,6 +35,12 @@ void CleanupGame(void);
 // メイン関数
 int main(void)
 {
+	// コンソールウィンドウの取得
+	HWND hWnd = GetConsoleWindow();
+	// ウィンドウの位置とサイズを設定 (コンソールウィンドウ, X座標, Y座標, 横幅, 高さ, 再描画フラグ)
+	MoveWindow(hWnd, 0, 0, 1920, 1080, TRUE);
+
+
 	while (1) {
 		COLOR(WHITE, BLACK);
 
@@ -67,7 +74,7 @@ int main(void)
 				}
 				// 画面描画処理
 				RenderScene(&player);
-				
+
 #ifdef _DEBUG
 				DisplayFPS();// DEBUGモードでFPS値を表示する
 #endif

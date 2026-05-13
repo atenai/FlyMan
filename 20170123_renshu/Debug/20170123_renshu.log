@@ -1,8 +1,8 @@
 ﻿  CScreen.cpp
   main.cpp
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(111,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(119,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(359,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
+C:\Users\alfam\Documents\FlyMan_Git\main.cpp(361,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   コードを生成中...
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(104,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(112,21): warning C4244: '=': 'int' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(352,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
-C:\Users\alfam\Documents\FlyMan_Git\main.cpp(354,2): warning C4244: '引数': 'float' から 'int' への変換です。データが失われる可能性があります。
   20170123_renshu.vcxproj -> C:\Users\alfam\Documents\FlyMan_Git\Debug\20170123_renshu.exe
